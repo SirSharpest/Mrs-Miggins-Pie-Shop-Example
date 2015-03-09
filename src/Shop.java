@@ -59,7 +59,7 @@ public class Shop {
 			DenominationFloat m = new DenominationFloat(ct, nc);
 			till.addFloat(m);
 
-			System.out.println("Denomination floats enetered into till: " + m);
+			System.out.println("Denomination floats entered into till: " + m);
 		} while (doContinue());
 	}
 
@@ -112,6 +112,8 @@ public class Shop {
 	public void getBalance() {
 		//System.out.println(till);
 		System.out.println(till);
+		
+		
 	}
 
 	/**
@@ -198,6 +200,9 @@ public class Shop {
 	}
 
 	private void printMenu() {
+		
+		
+		
 		System.out.println("Welcome to " + shopName + ". Please enter choice:");
 		System.out.println("1 - Stock the shop");
 		System.out.println("2 - Add coins to the till");
@@ -223,7 +228,7 @@ public class Shop {
 		    out.println(till);
 		}catch (IOException e) {
 		    //exception handling left as an exercise for the reader
-			
+		
 		}
 		
 	}
@@ -280,6 +285,8 @@ public class Shop {
 			int nc = Integer.valueOf(readTillResults[index+1]);
 			DenominationFloat m = new DenominationFloat(ct, nc);
 			till.addFloat(m);
+			
+			
 		}
 
 		/**

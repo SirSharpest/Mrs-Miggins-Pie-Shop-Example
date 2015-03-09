@@ -35,6 +35,7 @@ public class UKTill {
 		currentFloat.setQuantity(currentFloat.getQuantity()
 				+ theFloat.getQuantity());
 	}
+	
 
 	/**
 	 * Enables a user to clear a denomination float from the Till.
@@ -108,5 +109,5 @@ public class UKTill {
 		}
 		return results.toString();
 	}
-
+	
 }
