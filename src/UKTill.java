@@ -21,6 +21,8 @@ public class UKTill {
 			DenominationFloat denomFloat = new DenominationFloat(denom, 0);
 			contents[denom.ordinal()] = denomFloat;
 		}
+		
+		 
 	}
 
 	/**
@@ -87,6 +89,10 @@ public class UKTill {
 		// Make sure the floats in the till are decreased when we take some out!
 		// Tell the user if there isn't enough change or of the right type and that
 		// the shop owes them :-)
+		
+		
+		//this is the format for accessing the till change[0].getType(); 
+		
 		return change;
 	}
 

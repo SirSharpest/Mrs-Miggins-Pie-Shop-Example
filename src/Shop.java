@@ -1,5 +1,6 @@
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,6 +8,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+////////////////////////////////////////////////////////////////
+/////
+////		TODO FIX ALL NAMING CONVENSIONS
+////
+////////////////////////////////////////////////////////////////
 
 
 /**
@@ -31,6 +38,7 @@ public class Shop {
 		till = new UKTill();
 		scan = new Scanner(System.in);
 		shopItems = new ArrayList<Item>();
+		
 	}
 
 	/**
@@ -115,6 +123,21 @@ public class Shop {
 		
 		
 	}
+	
+	/**
+	 * Function to output a list of current stock 
+	 */
+	public void getStockList(){
+		
+		for(int index = 0; index < shopItems.size(); index++){
+			
+			System.out.println(shopItems.get(index).toString());
+			
+			
+		}
+		
+		
+	}
 
 	/**
 	 * runMenu provides the main menu to the shop allowing a user to select
@@ -145,13 +168,16 @@ public class Shop {
 				getBalance();
 				break;
 			case "6":
+				getStockList();
+				break;
+			case "7":
 				System.out.println("Thankyou for running " + shopName
 						+ " program");
 				break;
 			default:
 				System.err.println("Incorrect choice entered");
 			}
-		} while (!choice.equals("6"));
+		} while (!choice.equals("7"));
 	}
 
 	private boolean doContinue() {
@@ -209,7 +235,8 @@ public class Shop {
 		System.out.println("3 - Process customer order");
 		System.out.println("4 - Process customer payment");
 		System.out.println("5 - Display till balance");
-		System.out.println("6 - Exit shop program");
+		System.out.println("6 - Display current stock info");
+		System.out.println("7 - Exit shop program");
 	}
 
 	/**
@@ -218,6 +245,41 @@ public class Shop {
 	 *                thrown when file problems occur
 	 */
 	public void save() throws IOException {
+		
+		//saving the till 
+		saveTill();
+		//saving the stock
+		saveStock(); 
+		
+		
+	}
+	
+	
+	public void saveStock(){
+		
+		//this function saves only the stock and its
+		//info to a .txt file, it is set to overwrite all previous
+		//data, I have done this to ensure the correct format within
+		//the file is kept 
+		
+		StringBuilder strStock = new StringBuilder();
+		for(int index = 0; index < shopItems.size(); index++){
+			
+				strStock.append(shopItems.get(index).toString()).append('\n');
+			
+		}
+		
+		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(SHOP_STOCK_DATA_FILE
+				, false)))) {
+		    out.print(strStock);
+		}catch (IOException e) {
+		    //exception handling left as an exercise for the reader
+		
+		}
+		
+	}
+	
+	public void saveTill(){
 		
 		//The first part of this function saves only the till and its
 		//contents to a .txt file, it is set to overwrite all previous
@@ -232,6 +294,8 @@ public class Shop {
 		}
 		
 	}
+	
+	
 
 	/**
 	 * Loads data from the shop database (stock and till)
@@ -240,43 +304,115 @@ public class Shop {
 	 */
 	public void load() throws IOException {
 		
-		/**
-		 * As of 8/03/15 this part of the function is 
-		 * working and complete
-		 * 
-		 * This first part loads the till data 
-		 * it uses the scanner class to read info from the 
-		 * external .txt file
-		 * 
-		 * 
-		 */
+
+		//load all of the till data 
+			loadTill();
+		//load all of the stock data
+			loadStock();
+	
+	  }
+		
+	
+	
+	private void loadStock(){
+		
+		//going to store all of the files used in this
+		ArrayList<String> strItems = new ArrayList<String>();
+		
+		
+		//Reading in code 
+		Scanner readStockData = null;
+		try {
+			readStockData = new Scanner (new File(SHOP_STOCK_DATA_FILE));
+		} catch (FileNotFoundException e) {
+			// Something went wrong loading the till
+						System.err.println("Sorry but we were unable to load shop stock data: "
+								+ e.getMessage());
+		}
+		
+		//assigning delimiters of both newline and a ':'
+		readStockData.useDelimiter(":|\\n");
+		
+	
+		//loop to read all of the text file
+		while (readStockData.hasNext()){
+		   strItems.add(readStockData.next()); 	   
+		}
+		
+		//finding the number of items by dividing by 4
+		//as there are 4 properties per item
+		//there will always be 4 properties 
+		//or the files will not be saved
+		int numOfItems = (strItems.size() / 4);
+		
+		
+		
+		//closing the reading file
+		readStockData.close();
+		
+		//For this loop, 0 is the ID, 1 is the Name, 
+		//2 is the price in pence and 3 is the quantity 
+		//
+		//This loop adds the read in data to the programs stock list
+		for(int index = 0; index < numOfItems; index++){
+			
+			Item itmTemp = new Item(strItems.get(0+(4*index)), 
+					strItems.get(1+(4*index)), 
+					Integer.valueOf(strItems.get(2+(4*index))),
+					Integer.valueOf(strItems.get(3+(4*index))));
+			
+			shopItems.add(itmTemp); 
+			
+			
+		}
+
+	}
+	
+	
+	/**
+	 * 
+	 * This part loads the till data 
+	 * it uses the scanner class to read info from the 
+	 * external .txt file
+	 * 
+	 * created to shorten the load function
+	 * and to make easier to debug individual file loading
+	 * 
+	 */
+	private void loadTill(){
 		
 		//This array will hold all is read in from the scanner
 		//from the text file 
 		String[] readTillResults;
 		readTillResults = new String[24]; 
-			
 		
 		//Reading in code 
-		Scanner read = new Scanner (new File(SHOP_TILL_DATA_FILE));
+		Scanner readTillData = null;
+		try {
+			readTillData = new Scanner (new File(SHOP_TILL_DATA_FILE));
+		} catch (FileNotFoundException e) {
+			// Something went wrong loading the till
+						System.err.println("Sorry but we were unable to load shop till data: "
+								+ e.getMessage());
+		}
 		
 		//assigning delimiters of both newline and a ':'
-		read.useDelimiter(" x |\\n");
+		readTillData.useDelimiter(" x |\\n");
 		
 		
 		//index used to keep track of 
 		//position of applying info read from file
 		int index = 0; 
 		//loop to read all of the text file
-		while (read.hasNext() && index < 24)
+		while (readTillData.hasNext() && index < 24)
 		{
-		   readTillResults[index] = read.next(); 
+		   readTillResults[index] = readTillData.next(); 
 		   //increment index
 		   index++; 
 		   
 		}
 		//closing the reading file
-		read.close();
+		readTillData.close();
 		
 		//this uses a modified version of the already implemented 
 		//getDenominationType function as well as the startTill function
@@ -288,20 +424,9 @@ public class Shop {
 			
 			
 		}
-
-		/**
-		 * 
-		 * This part of the function will load the stock of the shop
-		 * 
-		 * 
-		 */
 		
 		
-		
-		
-	  }
-		
-
+	}
 
 	public static void main(String[] args) {
 		// Don't touch any of this code

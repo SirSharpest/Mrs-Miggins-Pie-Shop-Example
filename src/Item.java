@@ -76,6 +76,6 @@ public class Item {
 
 	@Override
 	public String toString() {
-		return identifier + ", " + name + ", " + cost + ", " + quanity;
+		return identifier + ":" + name + ":" + cost + ":" + quanity;
 	}
 }
