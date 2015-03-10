@@ -12,6 +12,7 @@ import java.util.Scanner;
 ////////////////////////////////////////////////////////////////
 /////
 ////		TODO FIX ALL NAMING CONVENSIONS
+////		ADD str - i - bl for basic variables
 ////
 ////////////////////////////////////////////////////////////////
 
@@ -45,15 +46,91 @@ public class Shop {
 	 * Using stockShop an owner can add various goods to the system. We can then
 	 * can add an item, set the price and set the stock level.
 	 */
-	public void stockShop() {
-		// ENTER CODE HERE 
-		// You may need to add an instance variable
-		// Ask for and obtain bardcode id
-		// Ask for and obtain cost in pennies
-		// Ask for and obtain quantity
-		// Add item to stock
+	public void stockShop() {		
+		//Using choice to control the flow of the while loop
+		// saying yes will allow the user to keep adding items
+		String choice;
+		do{
+			//variables used to construct the temp item
+			String strBarcode, strName, strPrice, strQuantity; 
+			 
+			
+			//ask user for barcode 
+			System.out.println("Please enter barcode of item"); 
+			strBarcode = scan.nextLine(); 
+			
+			//check that only numbers are in the barcode
+			//if the string contains anything but 0-9 then try again
+			while(!strBarcode.matches("[0-9]+")){
+				System.out.println("Please enter numbers only for a barcode");
+				System.out.println("Try again"); 
+				strBarcode = scan.nextLine();
+			}
+			
+			//ask user for name of item
+			System.out.println("Please enter name of item");
+			strName = scan.nextLine();
+			
+			//check for illegal characters that might break program 
+			if(strName.contains(":")){
+				//replacing :  characters with a -
+				String strTmp = strName.replaceAll(":", "-");
+				strName = strTmp; 
+			}
+			//get cost of item from user
+			System.out.println("Please enter cost of item in pennies");
+			strPrice = scan.nextLine();
+			
+			//ensure that the price is entered in numbers with no characters
+			while(!strPrice.matches("[0-9]+")){
+				System.out.println("Please enter numbers only for price");
+				System.out.println("Try again"); 
+				strPrice = scan.nextLine();
+			}
+			
+			//get the amount of items from user
+			System.out.println("Please enter quantity of item");
+			strQuantity = scan.nextLine();
+			
+			//ensure that the quantity given is only an integer value
+			while(!strQuantity.matches("[0-9]+")){
+				System.out.println("Please enter numbers only for the quantity");
+				System.out.println("Try again"); 
+				strQuantity = scan.nextLine();
+			}
+			
+			//creating a temporary item and converting the strings 
+			//used for quantity and price to integer values by casting
+			Item tmpItem = new Item(strBarcode, strName, 
+					Integer.parseInt(strPrice), Integer.parseInt(strQuantity)); 
+			
+			//confirming with the user that the entered info is correct
+			System.out.println("is this information correct: " + tmpItem.toString());
+			System.out.println("(Y or N)");
+			choice = scan.nextLine().toUpperCase(); 
+			
+			//if info is correct then add to stock list
+			if(choice.equals("Y")){
+				shopItems.add(tmpItem);
+				System.out.println("Item added to stock");
+			}
+			
+			//check if user wants to continue adding
+			System.out.println("Do you want to add another item? (Y or N)");
+			choice = scan.nextLine().toUpperCase(); 
+			
+		//continue loop if the user keys in a y or a Y
+		}while(choice.equals("Y"));
+		
+
 	}
 
+	////////////////////
+	//////////////////
+	////function to check if stock item already exists//
+	//////////////////////////////////////////////
+	
+	
 	/**
 	 * Using startTill, an owner can add the various denomination floats to the till
 	 * specifying the name, value and quantity of each item (If she has 33

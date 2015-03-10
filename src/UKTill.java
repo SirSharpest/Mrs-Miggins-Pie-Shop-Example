@@ -8,6 +8,7 @@
 
 public class UKTill {
 	private DenominationFloat[] contents;
+	 
 
 	/**
 	 * Builds an empty till
@@ -91,10 +92,13 @@ public class UKTill {
 		// the shop owes them :-)
 		
 		
-		//this is the format for accessing the till change[0].getType(); 
+		change[0].getQuantity(); 
 		
 		return change;
 	}
+	
+	
+	
 
 	/**
 	 * toString returns a formatted String representing denomination floats in
