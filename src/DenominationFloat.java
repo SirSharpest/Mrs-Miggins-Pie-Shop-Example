@@ -48,15 +48,13 @@ public class DenominationFloat {
 	}
 
 	/**
-	 * Takes away a quantity of a DF 
-	 * @param theFloat
-	 * 			the DF to alter 
+	 * Takes away a quantity of a DF  
 	 * @param quantity
-	 * 			the quantity difference in integer value
+	 * 			the quantity to change by in integer value
 	 */
-	public void subtractFloat(int iToSubtract){
+	public void changeFloat(int change){
 		
-		this.quantity =- iToSubtract;
+		this.quantity += change;
 		
 	}
 	

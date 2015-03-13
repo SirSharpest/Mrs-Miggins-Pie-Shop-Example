@@ -94,78 +94,111 @@ public class UKTill {
 		}
 		
 		
+		//This variable dictates if the value has been edited within the loop
+		//if it has then we know that there's reason to try again to make the change
+		//more accurate
+		boolean hasValueChanged;
 		
-		while(changeDue >= 0){
+		//Loop to create change 
+		do{
 			
+			//reset boolean 
+			hasValueChanged = false;
+			
+			//this is the same for every statement of this loop
+			//we check if this type of currency can be used as change
+			//if so we take away its value from what is due
+			//take it out of the till 
+			//and add it to the change that will be returned
 			if(changeDue >= UKDenomination.pound_50.getValue()
-					&& contents[12].getQuantity() > 0 ){
-				
+					&& contents[11].getQuantity() > 0 ){	
 				changeDue -= 5000;
-				contents[12].subtractFloat(1);
-				
-				
+				contents[11].changeFloat(-1);
+				change[11].changeFloat(1);
+			}
+			if(changeDue >= UKDenomination.pound_20.getValue()
+					&& contents[10].getQuantity() > 0 ){	
+				changeDue -= 2000;
+				contents[10].changeFloat(-1);
+				change[10].changeFloat(1);
+				hasValueChanged = true; 
+			}
+			if(changeDue >= UKDenomination.pound_10.getValue()
+					&& contents[9].getQuantity() > 0 ){	
+				changeDue -= 5000;
+				contents[9].changeFloat(-1);
+				change[9].changeFloat(1);
+				hasValueChanged = true;
+			}
+			if(changeDue >= UKDenomination.pound_5.getValue()
+					&& contents[8].getQuantity() > 0 ){	
+				changeDue -= 500;
+				contents[8].changeFloat(-1);
+				change[8].changeFloat(1);
+				hasValueChanged = true;
+			}
+			if(changeDue >= UKDenomination.pound_2.getValue()
+					&& contents[7].getQuantity() > 0 ){	
+				changeDue -= 200;
+				contents[7].changeFloat(-1);
+				change[7].changeFloat(1);
+				hasValueChanged = true;
+			}
+			if(changeDue >= UKDenomination.pound_1.getValue()
+					&& contents[6].getQuantity() > 0 ){	
+				changeDue -= 100;
+				contents[6].changeFloat(-1);
+				change[6].changeFloat(1);
+				hasValueChanged = true;
+			}
+			if(changeDue >= UKDenomination.pence_50.getValue()
+					&& contents[5].getQuantity() > 0 ){	
+				changeDue -= 50;
+				contents[5].changeFloat(-1);
+				change[5].changeFloat(1);
+				hasValueChanged = true;
+			}
+			if(changeDue >= UKDenomination.pence_20.getValue()
+					&& contents[4].getQuantity() > 0 ){	
+				changeDue -= 20;
+				contents[4].changeFloat(-1);
+				change[4].changeFloat(1);
+				hasValueChanged = true;
+			}
+			if(changeDue >= UKDenomination.pence_10.getValue()
+					&& contents[3].getQuantity() > 0 ){	
+				changeDue -= 10;
+				contents[3].changeFloat(-1);
+				change[3].changeFloat(1);
+				hasValueChanged = true;
+			}
+			if(changeDue >= UKDenomination.pence_5.getValue()
+					&& contents[2].getQuantity() > 0 ){	
+				changeDue -= 5;
+				contents[2].changeFloat(-1);
+				change[2].changeFloat(1);
+				hasValueChanged = true;
+			}
+			if(changeDue >= UKDenomination.pence_2.getValue()
+					&& contents[5].getQuantity() > 0 ){	
+				changeDue -= 2;
+				contents[1].changeFloat(-1);
+				change[1].changeFloat(1);
+				hasValueChanged = true;
+			}
+			if(changeDue >= UKDenomination.pence_1.getValue()
+					&& contents[0].getQuantity() > 0 ){	
+				changeDue -= 1;
+				contents[0].changeFloat(-1);
+				change[0].changeFloat(1);
+				hasValueChanged = true;
 			}
 			
-			if(changeDue >= UKDenomination.pound_20.getValue()){
-				
-			}
-			
-			if(changeDue >= UKDenomination.pound_10.getValue()){
-				
-			}
-			
-			if(changeDue >= UKDenomination.pound_5.getValue()){
-				
-			}
-			
-			if(changeDue >= UKDenomination.pound_2.getValue()){
-				
-			}
-			
-			if(changeDue >= UKDenomination.pound_1.getValue()){
-				
-			}
-			
-			if(changeDue >= UKDenomination.pence_50.getValue()){
-				
-			}
-			
-			if(changeDue >= UKDenomination.pence_20.getValue()){
-				
-			}
-			
-			if(changeDue >= UKDenomination.pence_10.getValue()){
-				
-			}
-			
-			if(changeDue >= UKDenomination.pence_5.getValue()){
-				
-			}
-			
-			if(changeDue >= UKDenomination.pence_2.getValue()){
-				
-			}
-			
-			if(changeDue >= UKDenomination.pence_1.getValue()){
-				
-			}
 			
 			
-			
-		}
+		}while(changeDue >= 0 || hasValueChanged);
 		
-		
-
-		
-		for(int index = 12; index < 12 ; index++){
-			
-			
-			
-			
-		}
-		
-		change[0].getQuantity(); 
-		
+		//return the array of the change required 
 		return change;
 	}
 	

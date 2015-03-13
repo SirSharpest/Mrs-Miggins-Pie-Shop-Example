@@ -165,6 +165,21 @@ public class Shop {
 		// Repeatedly ask for barcode id (simulates scanning barcode)
 		// Find and remove from stock
 		// Calculate overall cost ready for payment
+		String ID; 
+		
+		do{
+			System.out.println("Please enter in barcode of item"); 
+			ID = scan.nextLine(); 
+			//check if is existing barcode
+			if(isExistingID(ID)){
+				System.out.println("Invalid barcode");
+			}
+			
+		}while(!isExistingID(ID));
+		
+		
+		
+		
 	}	
 
 	/**
