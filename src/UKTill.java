@@ -67,7 +67,9 @@ public class UKTill {
 		}
 		return tillContents;
 	}
-
+	
+	
+	
 	/**
 	 * Calculates the change to be returned from the till and decrements the
 	 * till for each denomination
@@ -78,19 +80,89 @@ public class UKTill {
 	 *         to the provided changeDue value in pence. If there isn't
 	 *         enough change in the till then display an error message saying 
 	 *         that Mrs Miggins owes the customer some money!
-	 */
+	 */	
 	public DenominationFloat[] getChange(int changeDue) {
 		
-		DenominationFloat[] change = null; // Null added so that the class compiles
-		// ENTER CODE HERE
-		// Skip over empty denomination trays
-		// Make sure we only give back change from denomination smaller than changeDue!
-		// Keep taking out DenominationFloats of change from the till until we have the
-		// right amount to return.
-		// Make sure the floats in the till are decreased when we take some out!
-		// Tell the user if there isn't enough change or of the right type and that
-		// the shop owes them :-)
+		DenominationFloat[] change  = new DenominationFloat[UKDenomination.values().length];
+
+		// Initialise the array with empty floats for each denomination. This is
+		// a way of being able to subtract a 12 array from a 12 array and the indices
+		// will match up !
+		for (UKDenomination denom : UKDenomination.values()) {
+			DenominationFloat denomFloat = new DenominationFloat(denom, 0);
+			change[denom.ordinal()] = denomFloat;
+		}
 		
+		
+		
+		while(changeDue >= 0){
+			
+			if(changeDue >= UKDenomination.pound_50.getValue()
+					&& contents[12].getQuantity() > 0 ){
+				
+				changeDue -= 5000;
+				contents[12].subtractFloat(1);
+				
+				
+			}
+			
+			if(changeDue >= UKDenomination.pound_20.getValue()){
+				
+			}
+			
+			if(changeDue >= UKDenomination.pound_10.getValue()){
+				
+			}
+			
+			if(changeDue >= UKDenomination.pound_5.getValue()){
+				
+			}
+			
+			if(changeDue >= UKDenomination.pound_2.getValue()){
+				
+			}
+			
+			if(changeDue >= UKDenomination.pound_1.getValue()){
+				
+			}
+			
+			if(changeDue >= UKDenomination.pence_50.getValue()){
+				
+			}
+			
+			if(changeDue >= UKDenomination.pence_20.getValue()){
+				
+			}
+			
+			if(changeDue >= UKDenomination.pence_10.getValue()){
+				
+			}
+			
+			if(changeDue >= UKDenomination.pence_5.getValue()){
+				
+			}
+			
+			if(changeDue >= UKDenomination.pence_2.getValue()){
+				
+			}
+			
+			if(changeDue >= UKDenomination.pence_1.getValue()){
+				
+			}
+			
+			
+			
+		}
+		
+		
+
+		
+		for(int index = 12; index < 12 ; index++){
+			
+			
+			
+			
+		}
 		
 		change[0].getQuantity(); 
 		

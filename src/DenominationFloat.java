@@ -17,6 +17,19 @@ public class DenominationFloat {
 		this(n, 0);
 	}
 	
+	/*
+	 * Function to return a boolean
+	 * which states if a DF has a anything in it 
+	 */
+	public boolean isEmpty(){
+		
+		if(this.quantity == 0){
+			return true;
+		}
+		return false; 
+	}
+	
+	
 	public DenominationFloat(UKDenomination n, int q){
 		name = n;
 		quantity = q;
@@ -34,6 +47,19 @@ public class DenominationFloat {
 		this.quantity = quantity;
 	}
 
+	/**
+	 * Takes away a quantity of a DF 
+	 * @param theFloat
+	 * 			the DF to alter 
+	 * @param quantity
+	 * 			the quantity difference in integer value
+	 */
+	public void subtractFloat(int iToSubtract){
+		
+		this.quantity =- iToSubtract;
+		
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

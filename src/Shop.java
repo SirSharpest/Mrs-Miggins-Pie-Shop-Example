@@ -67,6 +67,13 @@ public class Shop {
 				strBarcode = scan.nextLine();
 			}
 			
+			//check that barcode ID is unique
+			while(isExistingID(strBarcode)){
+				System.out.println("Please enter in only unique barcodes");
+				System.out.println("Try again");
+				strBarcode = scan.nextLine();
+			}
+			
 			//ask user for name of item
 			System.out.println("Please enter name of item");
 			strName = scan.nextLine();
@@ -125,10 +132,10 @@ public class Shop {
 
 	}
 
-	////////////////////
-	//////////////////
-	////function to check if stock item already exists//
-	//////////////////////////////////////////////
+
+	
+
+	
 	
 	
 	/**
@@ -257,6 +264,79 @@ public class Shop {
 		} while (!choice.equals("7"));
 	}
 
+	
+
+	/**
+	 * Saves data to the shop database (stock and till)
+	 * @exception IOException
+	 *                thrown when file problems occur
+	 */
+	public void save() throws IOException {
+		
+		//saving the till 
+		saveTill();
+		//saving the stock
+		saveStock(); 
+		
+		
+	}
+	
+	
+	public void saveStock(){
+		
+		//this function saves only the stock and its
+		//info to a .txt file, it is set to overwrite all previous
+		//data, I have done this to ensure the correct format within
+		//the file is kept 
+		
+		StringBuilder strStock = new StringBuilder();
+		for(int index = 0; index < shopItems.size(); index++){
+			
+				strStock.append(shopItems.get(index).toString()).append('\n');
+			
+		}
+		
+		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(SHOP_STOCK_DATA_FILE
+				, false)))) {
+		    out.print(strStock);
+		}catch (IOException e) {
+		    //exception handling left as an exercise for the reader
+		
+		}
+		
+	}
+	
+	public void saveTill(){
+		
+		//The first part of this function saves only the till and its
+		//contents to a .txt file, it is set to overwrite all previous
+		//data, I have done this to ensure the correct format within
+		//the file is kept 
+		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(SHOP_TILL_DATA_FILE
+				, false)))) {
+		    out.println(till);
+		}catch (IOException e) {
+		    //exception handling left as an exercise for the reader
+		
+		}
+		
+	}
+	
+	/**
+	 * Loads data from the shop database (stock and till)
+	 * @exception IOException
+	 *                thrown when file problems occur
+	 */
+	public void load() throws IOException {
+		
+
+		//load all of the till data 
+			loadTill();
+		//load all of the stock data
+			loadStock();
+	
+	  }
+	
 	private boolean doContinue() {
 		System.out.println("Continue? (Y/N)");
 		String answer = scan.next().toUpperCase();
@@ -315,79 +395,9 @@ public class Shop {
 		System.out.println("6 - Display current stock info");
 		System.out.println("7 - Exit shop program");
 	}
-
-	/**
-	 * Saves data to the shop database (stock and till)
-	 * @exception IOException
-	 *                thrown when file problems occur
-	 */
-	public void save() throws IOException {
-		
-		//saving the till 
-		saveTill();
-		//saving the stock
-		saveStock(); 
-		
-		
-	}
-	
-	
-	public void saveStock(){
-		
-		//this function saves only the stock and its
-		//info to a .txt file, it is set to overwrite all previous
-		//data, I have done this to ensure the correct format within
-		//the file is kept 
-		
-		StringBuilder strStock = new StringBuilder();
-		for(int index = 0; index < shopItems.size(); index++){
-			
-				strStock.append(shopItems.get(index).toString()).append('\n');
-			
-		}
-		
-		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(SHOP_STOCK_DATA_FILE
-				, false)))) {
-		    out.print(strStock);
-		}catch (IOException e) {
-		    //exception handling left as an exercise for the reader
-		
-		}
-		
-	}
-	
-	public void saveTill(){
-		
-		//The first part of this function saves only the till and its
-		//contents to a .txt file, it is set to overwrite all previous
-		//data, I have done this to ensure the correct format within
-		//the file is kept 
-		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(SHOP_TILL_DATA_FILE
-				, false)))) {
-		    out.println(till);
-		}catch (IOException e) {
-		    //exception handling left as an exercise for the reader
-		
-		}
-		
-	}
-	
 	
 
-	/**
-	 * Loads data from the shop database (stock and till)
-	 * @exception IOException
-	 *                thrown when file problems occur
-	 */
-	public void load() throws IOException {
-		
 
-		//load all of the till data 
-			loadTill();
-		//load all of the stock data
-			loadStock();
-	
-	  }
 		
 	
 	
@@ -505,6 +515,26 @@ public class Shop {
 		
 	}
 
+	/*
+	 * Function which will check if the ID of an item already exists 
+	 * in stock
+	 * @param Item newItem 
+	 */
+	private boolean isExistingID(String strID){
+		
+		for(int index = 0  ; index < shopItems.size(); index++){
+			
+			if(shopItems.get(index).getIdentifier() ==
+					strID){
+				return true; 
+			}
+			
+		}
+	
+		return false; 
+	}
+	
+	
 	public static void main(String[] args) {
 		// Don't touch any of this code
 		Shop migginsPieShop = new Shop("Mrs Miggins Pie Shop");
