@@ -33,11 +33,16 @@ public class Shop {
 	private static final String SHOP_STOCK_DATA_FILE = "./stock.txt";
 	private static final String SHOP_TILL_DATA_FILE = "./till.txt";
 
+	//private backups of till and items in case of canceled sale
+	private UKTill backupTill; 
+	private ArrayList<Item> backupShopItems; 
+	
 	public Shop(String name) {
 		shopName = name;
 		till = new UKTill();
 		scan = new Scanner(System.in);
 		shopItems = new ArrayList<Item>();
+		
 		
 	}
 
@@ -130,13 +135,26 @@ public class Shop {
 		
 
 	}
+	
+	/**
+	 * backup function to run after load
+	 */
+	private void backUpUnchangedData(){
+		
+		backupTill = till; 
+		backupShopItems = shopItems; 
+		
+	}
+	
+	/**
+	 * use function to restore from backup following cancelled sale
+	 */
+	private void cancelSale(){
+		
+		till = backupTill; 
+		shopItems = backupShopItems;
+	}
 
-
-	
-
-	
-	
-	
 	/**
 	 * Using startTill, an owner can add the various denomination floats to the till
 	 * specifying the name, value and quantity of each item (If she has 33
@@ -161,26 +179,109 @@ public class Shop {
 	 * system then tells her how much to charge.
 	 */
 	public void runTill() {
-		// ENTER CODE HERE
-		// Repeatedly ask for barcode id (simulates scanning barcode)
-		// Find and remove from stock
-		// Calculate overall cost ready for payment
-		String ID; 
 		
+		//Variable used to get choice to continue
+		String choice; 
+		int totalCost = 0; 
+		
+		//using nested loop to allow for multiple input
+		//of multiple items up for sale at once
 		do{
-			System.out.println("Please enter in barcode of item"); 
-			ID = scan.nextLine(); 
-			//check if is existing barcode
-			if(isExistingID(ID)){
-				System.out.println("Invalid barcode");
+			
+			//using this boolean for loop condition of input
+			boolean isValidInput = false;
+			//Variable to hold ID of sold item
+			String id; 
+			
+			//get the barcode of the item from the user 
+			do{
+				System.out.println("Please enter in barcode of item"); 
+				id = scan.nextLine(); 
+				
+				//check if is existing barcode
+				if(!isExistingID(id)){
+					System.out.println("Invalid barcode");
+				}
+				
+			}while(!isExistingID(id));
+			
+			//get the index of the item that we would like to sell 
+			int index = getItemIndex(id);
+			
+			//variable to hold quantity
+			int quantity = 0;
+			
+			//get the quantity from the user
+			do{
+				isValidInput = false;
+				
+				System.out.println("Please enter the quantity you'd like to purchase");
+				System.out.println("There are " + shopItems.get(index).getQuanity() + " in stock currently");
+				String temp = (scan.nextLine()); 
+				
+				//ensure that the quantity given is only an integer value
+				if(!temp.matches("[0-9]+")){
+					System.out.println("Please enter numbers only for the quantity");
+
+				}
+				//this input is valid therefore set it and break loop 
+				else{
+					quantity = Integer.parseInt(temp);
+					isValidInput = true; 
+				}
+			
+			}while(!isValidInput);
+			
+			//remove the quantity of items from stock and proceed
+				//variable to hold old quantity temp
+			int oldQuant = shopItems.get(index).getQuanity();
+			shopItems.get(index).setQuanity(oldQuant - quantity);
+			
+			//
+			totalCost += (shopItems.get(index).getCost()*quantity); 
+			
+			//ask user if data is correct and output price
+			System.out.println("Order is for: " + shopItems.get(index).getName() + " x " + quantity);
+			System.out.println("The cost of this is: " + (shopItems.get(index).getCost()*quantity) );
+			System.out.println("Is this correct? Y or N ");
+			
+			
+			
+			if(scan.nextLine().toUpperCase() == "N"){
+				cancelSale(); 
+				System.out.println("Sale voided");
+				totalCost -= (shopItems.get(index).getCost()); 
 			}
 			
-		}while(!isExistingID(ID));
-		
-		
+			System.out.println("Would you like to continue adding items? Y or N");
+			choice = scan.nextLine().toUpperCase(); 
+			
+		}while(choice == "Y");
+	
+		System.out.println("Your total cost is now: " + totalCost);
 		
 		
 	}	
+	
+	/**
+	 * Function to find the index location of the item 
+	 * Whose barcode we have
+	 * @param itemID
+	 * 		ID reference of Item in the shopItems array list 
+	 * @return
+	 */
+	private int getItemIndex(String itemID){
+		
+		//looping through until we get to the item which matches 
+		for(int index = 0; index < shopItems.size(); index++){
+			if(shopItems.get(index).getIdentifier().compareTo(itemID) == 0){
+				return index; 
+			}
+		}
+		
+		System.out.println("Something went terribly wrong \nTry turnning machine off and on again");
+		return -1; 
+	}
 
 	/**
 	 * Using getChange, an owner can tell the system how much of each
@@ -348,7 +449,8 @@ public class Shop {
 			loadTill();
 		//load all of the stock data
 			loadStock();
-	
+		//set backup data
+			backUpUnchangedData(); 
 	  }
 	
 	private boolean doContinue() {
@@ -529,17 +631,18 @@ public class Shop {
 		
 	}
 
-	/*
+	/**
 	 * Function which will check if the ID of an item already exists 
 	 * in stock
-	 * @param Item newItem 
+	 * @param String strID
 	 */
 	private boolean isExistingID(String strID){
 		
 		for(int index = 0  ; index < shopItems.size(); index++){
 			
-			if(shopItems.get(index).getIdentifier() ==
-					strID){
+			if(shopItems.get(index).getIdentifier().compareTo(strID) ==
+					0){
+				System.out.println(shopItems.get(index).getIdentifier().toString());
 				return true; 
 			}
 			
