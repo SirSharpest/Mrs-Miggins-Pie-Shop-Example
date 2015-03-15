@@ -51,9 +51,7 @@ public class Shop {
 	 * can add an item, set the price and set the stock level.
 	 */
 	public void stockShop() {		
-		//Using choice to control the flow of the while loop
-		// saying yes will allow the user to keep adding items
-		String choice;
+
 		do{
 			//variables used to construct the temp item
 			String strBarcode, strName, strPrice, strQuantity; 
@@ -116,22 +114,19 @@ public class Shop {
 					Integer.parseInt(strPrice), Integer.parseInt(strQuantity)); 
 			
 			//confirming with the user that the entered info is correct
-			System.out.println("is this information correct: " + tmpItem.toString());
-			System.out.println("(Y or N)");
-			choice = scan.nextLine().toUpperCase(); 
+			System.out.println("Continue with this information correct: " + tmpItem.toString());
 			
 			//if info is correct then add to stock list
-			if(choice.equals("Y")){
+			if(doContinue()){
 				shopItems.add(tmpItem);
 				System.out.println("Item added to stock");
+			}else{
+				System.out.println("Item not added");
 			}
+
 			
-			//check if user wants to continue adding
-			System.out.println("Do you want to add another item? (Y or N)");
-			choice = scan.nextLine().toUpperCase(); 
-			
-		//continue loop if the user keys in a y or a Y
-		}while(choice.equals("Y"));
+		//continue loop if the user wishes or else break
+		}while(doContinue());
 		
 
 	}
@@ -250,21 +245,21 @@ public class Shop {
 			//ask user if data is correct and output price
 			System.out.println("Order is for: " + shopItems.get(index).getName() + " x " + quantity);
 			System.out.println("The cost of this is: " + (shopItems.get(index).getCost()*quantity) );
-			System.out.println("Is this correct? Y or N ");
-			
-			
-			//check if user is happy with entered information
-			if(scan.nextLine().toUpperCase() == "N"){
-				cancelSale(); 
-				System.out.println("Sale voided");
-				totalCostDue -= (shopItems.get(index).getCost()); 
-			}
-			
-; 
+					
+ 
 			
 		}while(doContinue());
 	
 		System.out.println("Your total cost is now: " + totalCostDue);
+		System.out.println("Continue with payment?");
+		
+		if(!doContinue()){
+			cancelSale(); 
+			System.out.println("Sale voided");
+			totalCostDue = 0; 
+		}
+
+		
 		
 		//call get change to cash from buyer and provide them with change; 
 		getChange();
@@ -468,10 +463,13 @@ public class Shop {
 	
 	
 	private boolean doContinue() {
+		
 		System.out.println("Continue? (Y/N)");
-		String answer = scan.next().toUpperCase();
-		scan.nextLine();
+		String answer = scan.nextLine().toUpperCase();
+			
 		return answer.equals("Y");
+
+
 	}
 
 	private int getInt(String message) {

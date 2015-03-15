@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * My first attempt at the UKTill 
  * Contains floats of various UK denominations
@@ -83,6 +85,9 @@ public class UKTill {
 	 */	
 	public DenominationFloat[] getChange(int changeDue) {
 		
+		// ArrayList<DenominationFloat> changeX = new ArrayList<DenominationFloat>();
+		
+		
 		DenominationFloat[] change  = new DenominationFloat[UKDenomination.values().length];
 
 		// Initialise the array with empty floats for each denomination. This is
@@ -92,6 +97,8 @@ public class UKTill {
 			DenominationFloat denomFloat = new DenominationFloat(denom, 0);
 			change[denom.ordinal()] = denomFloat;
 		}
+		
+		
 		
 		
 		//This variable dictates if the value has been edited within the loop
@@ -125,7 +132,7 @@ public class UKTill {
 			}
 			if(changeDue >= UKDenomination.pound_10.getValue()
 					&& contents[9].getQuantity() > 0 ){	
-				changeDue -= 5000;
+				changeDue -= 1000;
 				contents[9].changeFloat(-1);
 				change[9].changeFloat(1);
 				hasValueChanged = true;
@@ -224,5 +231,6 @@ public class UKTill {
 		}
 		return results.toString();
 	}
+	
 	
 }
