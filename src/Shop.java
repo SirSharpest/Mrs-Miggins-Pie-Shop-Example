@@ -33,7 +33,7 @@ public class Shop {
 	private static final String SHOP_STOCK_DATA_FILE = "./stock.txt";
 	private static final String SHOP_TILL_DATA_FILE = "./till.txt";
 
-	//private backups of till and items in case of canceled sale
+	//private backups of till and items in case of cancelled sale
 	private UKTill backupTill; 
 	private ArrayList<Item> backupShopItems; 
 	
@@ -182,7 +182,6 @@ public class Shop {
 		
 		//Variable used to get choice to continue
 		String choice; 
-		int totalCost = 0; 
 		
 		//using nested loop to allow for multiple input
 		//of multiple items up for sale at once
@@ -222,15 +221,21 @@ public class Shop {
 				//ensure that the quantity given is only an integer value
 				if(!temp.matches("[0-9]+")){
 					System.out.println("Please enter numbers only for the quantity");
+					
 
+				}
+				else if(Integer.parseInt(temp) <= shopItems.get(index).getQuanity()){
+					System.out.println("Please ensure that you have choosen a quantity that we can provide");
 				}
 				//this input is valid therefore set it and break loop 
 				else{
 					quantity = Integer.parseInt(temp);
 					isValidInput = true; 
 				}
-			
+				
+			//run loop while input is not valid 
 			}while(!isValidInput);
+			
 			
 			//remove the quantity of items from stock and proceed
 				//variable to hold old quantity temp
@@ -238,7 +243,7 @@ public class Shop {
 			shopItems.get(index).setQuanity(oldQuant - quantity);
 			
 			//
-			totalCost += (shopItems.get(index).getCost()*quantity); 
+			totalCostDue += (shopItems.get(index).getCost()*quantity); 
 			
 			//ask user if data is correct and output price
 			System.out.println("Order is for: " + shopItems.get(index).getName() + " x " + quantity);
@@ -250,7 +255,7 @@ public class Shop {
 			if(scan.nextLine().toUpperCase() == "N"){
 				cancelSale(); 
 				System.out.println("Sale voided");
-				totalCost -= (shopItems.get(index).getCost()); 
+				totalCostDue -= (shopItems.get(index).getCost()); 
 			}
 			
 			System.out.println("Would you like to continue adding items? Y or N");
@@ -258,9 +263,10 @@ public class Shop {
 			
 		}while(choice == "Y");
 	
-		System.out.println("Your total cost is now: " + totalCost);
+		System.out.println("Your total cost is now: " + totalCostDue);
 		
-		
+		//call get change to cash from buyer and provide them with change; 
+		getChange();
 	}	
 	
 	/**
@@ -291,12 +297,13 @@ public class Shop {
 	public void getChange() {
 		System.out.println("Hand over the money!");
 		do {
-			// ENTER CODE HERE
-			// Get the denomination
-			// Get the number of coins
-			// Add float of coins to the till
-			// Calculate remaining amount to pay
-			// Display remaining amount to pay
+				UKDenomination ct = getDenominationType();
+				int nc = getInt("Number of these coins: ");
+				DenominationFloat m = new DenominationFloat(ct, nc);
+				till.addFloat(m);
+
+				System.out.println("Denomination floats entered into till: " + m);
+			 
 		} while (totalCostDue > 0);
 		
 		// Calculate change
@@ -331,11 +338,7 @@ public class Shop {
 		for(int index = 0; index < shopItems.size(); index++){
 			
 			System.out.println(shopItems.get(index).toString());
-			
-			
 		}
-		
-		
 	}
 
 	/**
@@ -452,6 +455,10 @@ public class Shop {
 		//set backup data
 			backUpUnchangedData(); 
 	  }
+	
+	
+	
+	
 	
 	private boolean doContinue() {
 		System.out.println("Continue? (Y/N)");
@@ -642,7 +649,6 @@ public class Shop {
 			
 			if(shopItems.get(index).getIdentifier().compareTo(strID) ==
 					0){
-				System.out.println(shopItems.get(index).getIdentifier().toString());
 				return true; 
 			}
 			
