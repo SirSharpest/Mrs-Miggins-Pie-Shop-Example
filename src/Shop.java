@@ -181,7 +181,7 @@ public class Shop {
 	public void runTill() {
 		
 		//Variable used to get choice to continue
-		String choice; 
+		
 		
 		//using nested loop to allow for multiple input
 		//of multiple items up for sale at once
@@ -221,11 +221,13 @@ public class Shop {
 				//ensure that the quantity given is only an integer value
 				if(!temp.matches("[0-9]+")){
 					System.out.println("Please enter numbers only for the quantity");
-					
-
+					//try again
+					continue; 
 				}
-				else if(Integer.parseInt(temp) <= shopItems.get(index).getQuanity()){
+				if(Integer.parseInt(temp) > shopItems.get(index).getQuanity()){
 					System.out.println("Please ensure that you have choosen a quantity that we can provide");
+					//try again
+					continue; 
 				}
 				//this input is valid therefore set it and break loop 
 				else{
@@ -251,17 +253,16 @@ public class Shop {
 			System.out.println("Is this correct? Y or N ");
 			
 			
-			
+			//check if user is happy with entered information
 			if(scan.nextLine().toUpperCase() == "N"){
 				cancelSale(); 
 				System.out.println("Sale voided");
 				totalCostDue -= (shopItems.get(index).getCost()); 
 			}
 			
-			System.out.println("Would you like to continue adding items? Y or N");
-			choice = scan.nextLine().toUpperCase(); 
+; 
 			
-		}while(choice == "Y");
+		}while(doContinue());
 	
 		System.out.println("Your total cost is now: " + totalCostDue);
 		
@@ -296,20 +297,26 @@ public class Shop {
 	 */
 	public void getChange() {
 		System.out.println("Hand over the money!");
+		
 		do {
+			
+				//same method used previously to get input for the till from the owner
+				//restructured to take in the payment 
 				UKDenomination ct = getDenominationType();
 				int nc = getInt("Number of these coins: ");
 				DenominationFloat m = new DenominationFloat(ct, nc);
 				till.addFloat(m);
-
 				System.out.println("Denomination floats entered into till: " + m);
-			 
+				//remove value of these coins from total cost
+				totalCostDue -= (ct.getValue() * nc);
+				
 		} while (totalCostDue > 0);
 		
 		// Calculate change
 		if (totalCostDue == 0){
 			System.out.println("You provided the exact amount, thank you!");
 		} else {
+			System.out.println("Ping!"); 
 			DenominationFloat[] change = till.getChange(Math.abs(totalCostDue));
 			System.out.println("Here is your change:");
 			for (DenominationFloat m: change){

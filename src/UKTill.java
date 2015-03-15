@@ -196,7 +196,7 @@ public class UKTill {
 			
 			
 			
-		}while(changeDue >= 0 || hasValueChanged);
+		}while(changeDue > 0 || hasValueChanged);
 		
 		//return the array of the change required 
 		return change;
