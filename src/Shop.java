@@ -8,13 +8,6 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-////////////////////////////////////////////////////////////////
-/////
-////		TODO FIX ALL NAMING CONVENSIONS
-////		ADD str - i - bl for basic variables
-////
-////////////////////////////////////////////////////////////////
-
 
 /**
  * This is the main class - the program is run by java Shop
@@ -32,9 +25,9 @@ public class Shop {
 	private int totalCostDue; // Store as pence
 	private boolean isSaleProcessed = false; 
 	
-	//if running from eclipse then use "./" if running from commandline "../"
-	private static final String SHOP_STOCK_DATA_FILE = "../stock.txt";
-	private static final String SHOP_TILL_DATA_FILE = "../till.txt";
+	
+	private static final String SHOP_STOCK_DATA_FILE = "./stock.txt";
+	private static final String SHOP_TILL_DATA_FILE = "./till.txt";
 
 	//private backups of till and items in case of cancelled sale
 	private UKTill backupTill; 
@@ -127,7 +120,7 @@ public class Shop {
 				System.out.println("Item not added");
 			}
 
-			
+			System.out.println("Add more items?");
 		//continue loop if the user wishes or else break
 		}while(doContinue());
 		
@@ -149,6 +142,9 @@ public class Shop {
 			till.addFloat(m);
 
 			System.out.println("Denomination floats entered into till: " + m);
+			
+			//ask user if they wish to proceed to add more items to the till
+			System.out.println("Add more cash to till?");
 		} while (doContinue());
 	}
 
@@ -233,14 +229,10 @@ public class Shop {
 			System.out.println("The cost of this is: " + (shopItems.get(index).getCost()*quantity) );
 					
  
-			
+			System.out.println("Would you like to continue adding items?");
 		}while(doContinue());
 	
 		System.out.println("Your total cost is now: " + totalCostDue);
-
-
-		
-		
 
 	}	
 	
@@ -273,7 +265,7 @@ public class Shop {
 			System.out.println("You provided the exact amount, thank you!");
 		} else {
 			
-			DenominationFloat[] change = till.getChange(Math.abs(totalCostDue));
+			ArrayList <DenominationFloat> change = till.getChange(Math.abs(totalCostDue));
 			System.out.println("Here is your change:");
 			isSaleProcessed = true; 
 			for (DenominationFloat m: change){
@@ -337,13 +329,17 @@ public class Shop {
 				getStockList();
 				break;
 			case "7":
+				System.out.println("Sale has been voided and stock/payment reset");
+				cancelSale(); 
+				break;
+			case "8":
 				System.out.println("Thankyou for running " + shopName
 						+ " program");
 				break;
 			default:
 				System.err.println("Incorrect choice entered");
 			}
-		} while (!choice.equals("7"));
+		} while (!choice.equals("8"));
 	}
 
 	
@@ -469,12 +465,41 @@ public class Shop {
 	}
 
 	
-	
+	/**
+	 * Small function that checks if the user 
+	 * has entered a yes or no response
+	 * 
+	 * this function was modified to provide error checking in input
+	 * 
+	 * @return answer
+	 * 			answer will give a true or false response to the 
+	 * 			question of yes or no
+	 */
 	private boolean doContinue() {
 		
-		System.out.println("Continue? (Y/N)");
-		String answer = scan.nextLine().toUpperCase();
+		//string to hold the input
+		String answer;
+		//boolean used to condition the loop until it gets 
+		//something that is valid
+		boolean isValidInput; 
+		
+		//do while loop to ensure correct input is given
+		do{
+			isValidInput = false; 
 			
+			System.out.println("(Y/N)");
+			answer = scan.nextLine().toUpperCase();
+			
+			if(answer.equalsIgnoreCase("N") ||
+					answer.equalsIgnoreCase("Y")){
+				isValidInput = true;
+			}
+			else{
+				System.out.println("Error with input, try again");
+			}
+			
+		}while(!isValidInput);
+		
 		return answer.equals("Y");
 
 
@@ -529,7 +554,8 @@ public class Shop {
 		System.out.println("4 - Process customer payment");
 		System.out.println("5 - Display till balance");
 		System.out.println("6 - Display current stock info");
-		System.out.println("7 - Exit shop program");
+		System.out.println("7 - Cancel pending sale");
+		System.out.println("8 - Exit shop program");
 	}
 	
 

@@ -1,3 +1,8 @@
+import java.util.ArrayList;
+
+
+
+
 
 /**
  * My first attempt at the UKTill 
@@ -77,12 +82,13 @@ public class UKTill {
 	 * 
 	 * @param changeDue
 	 *            The amount in pence we wish to extract from the till. 
-	 * @return An array of denominations of different values that are in sum equal
+	 * @return trimmedChange
+	 * 			An array list of denominations of different values that are in sum equal
 	 *         to the provided changeDue value in pence. If there isn't
 	 *         enough change in the till then display an error message saying 
 	 *         that Mrs Miggins owes the customer some money!
 	 */	
-	public DenominationFloat[] getChange(int changeDue) {
+	public ArrayList<DenominationFloat> getChange(int changeDue) {
 		
 		
 		
@@ -203,11 +209,26 @@ public class UKTill {
 			
 		}while(changeDue > 0 || hasValueChanged);
 		
+		//used an array list here to trim down the output of the function
+		ArrayList<DenominationFloat> trimmedChange = new ArrayList<DenominationFloat>();
+		
+		//looping to only add values > 0 to reduce output spam
+		for(int index = 0; index < 12; index++){
+			
+			if(change[index].getQuantity() != 0){
+				trimmedChange.add(change[index]);
+			}
+			
+		}
+		
+	
+		
+		
 		
 		
 		
 		//return the array of the change required 
-		return change;
+		return trimmedChange;
 	}
 	
 	
