@@ -1,4 +1,3 @@
-//import java.util.ArrayList;
 
 /**
  * My first attempt at the UKTill 
@@ -85,7 +84,6 @@ public class UKTill {
 	 */	
 	public DenominationFloat[] getChange(int changeDue) {
 		
-		// ArrayList<DenominationFloat> changeX = new ArrayList<DenominationFloat>();
 		
 		
 		DenominationFloat[] change  = new DenominationFloat[UKDenomination.values().length];
@@ -204,6 +202,9 @@ public class UKTill {
 			
 			
 		}while(changeDue > 0 || hasValueChanged);
+		
+		
+		
 		
 		//return the array of the change required 
 		return change;

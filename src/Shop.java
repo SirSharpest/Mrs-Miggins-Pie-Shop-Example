@@ -30,8 +30,11 @@ public class Shop {
 	private UKTill till;
 	private ArrayList<Item> shopItems;
 	private int totalCostDue; // Store as pence
-	private static final String SHOP_STOCK_DATA_FILE = "./stock.txt";
-	private static final String SHOP_TILL_DATA_FILE = "./till.txt";
+	private boolean isSaleProcessed = false; 
+	
+	//if running from eclipse then use "./" if running from commandline "../"
+	private static final String SHOP_STOCK_DATA_FILE = "../stock.txt";
+	private static final String SHOP_TILL_DATA_FILE = "../till.txt";
 
 	//private backups of till and items in case of cancelled sale
 	private UKTill backupTill; 
@@ -131,24 +134,6 @@ public class Shop {
 
 	}
 	
-	/**
-	 * backup function to run after load
-	 */
-	private void backUpUnchangedData(){
-		
-		backupTill = till; 
-		backupShopItems = shopItems; 
-		
-	}
-	
-	/**
-	 * use function to restore from backup following cancelled sale
-	 */
-	private void cancelSale(){
-		
-		till = backupTill; 
-		shopItems = backupShopItems;
-	}
 
 	/**
 	 * Using startTill, an owner can add the various denomination floats to the till
@@ -175,7 +160,8 @@ public class Shop {
 	 */
 	public void runTill() {
 		
-		//Variable used to get choice to continue
+		//set variable to false so we can track if sale is completed 
+		isSaleProcessed = false; 
 		
 		
 		//using nested loop to allow for multiple input
@@ -251,39 +237,14 @@ public class Shop {
 		}while(doContinue());
 	
 		System.out.println("Your total cost is now: " + totalCostDue);
-		System.out.println("Continue with payment?");
-		
-		if(!doContinue()){
-			cancelSale(); 
-			System.out.println("Sale voided");
-			totalCostDue = 0; 
-		}
+
 
 		
 		
-		//call get change to cash from buyer and provide them with change; 
-		getChange();
+
 	}	
 	
-	/**
-	 * Function to find the index location of the item 
-	 * Whose barcode we have
-	 * @param itemID
-	 * 		ID reference of Item in the shopItems array list 
-	 * @return
-	 */
-	private int getItemIndex(String itemID){
-		
-		//looping through until we get to the item which matches 
-		for(int index = 0; index < shopItems.size(); index++){
-			if(shopItems.get(index).getIdentifier().compareTo(itemID) == 0){
-				return index; 
-			}
-		}
-		
-		System.out.println("Something went terribly wrong \nTry turnning machine off and on again");
-		return -1; 
-	}
+
 
 	/**
 	 * Using getChange, an owner can tell the system how much of each
@@ -311,9 +272,10 @@ public class Shop {
 		if (totalCostDue == 0){
 			System.out.println("You provided the exact amount, thank you!");
 		} else {
-			System.out.println("Ping!"); 
+			
 			DenominationFloat[] change = till.getChange(Math.abs(totalCostDue));
 			System.out.println("Here is your change:");
+			isSaleProcessed = true; 
 			for (DenominationFloat m: change){
 				if (m != null){
 					System.out.println(m);
@@ -393,6 +355,13 @@ public class Shop {
 	 */
 	public void save() throws IOException {
 		
+		//if this is false
+		//then we add back stock to the list
+		//and take money back out of the till
+		if(!isSaleProcessed){
+			cancelSale(); 
+		}
+		
 		//saving the till 
 		saveTill();
 		//saving the stock
@@ -460,6 +429,45 @@ public class Shop {
 	
 	
 	
+	/**
+	 * Function to find the index location of the item 
+	 * Whose barcode we have
+	 * @param itemID
+	 * 		ID reference of Item in the shopItems array list 
+	 * @return
+	 */
+	private int getItemIndex(String itemID){
+		
+		//looping through until we get to the item which matches 
+		for(int index = 0; index < shopItems.size(); index++){
+			if(shopItems.get(index).getIdentifier().compareTo(itemID) == 0){
+				return index; 
+			}
+		}
+		
+		System.out.println("Something went terribly wrong \nTry turnning machine off and on again");
+		return -1; 
+	}
+	
+	/**
+	 * backup function to run after load
+	 */
+	private void backUpUnchangedData(){
+		
+		backupTill = till; 
+		backupShopItems = shopItems; 
+		
+	}
+	
+	/**
+	 * use function to restore from backup following cancelled sale
+	 */
+	private void cancelSale(){
+		
+		till = backupTill; 
+		shopItems = backupShopItems;
+	}
+
 	
 	
 	private boolean doContinue() {
