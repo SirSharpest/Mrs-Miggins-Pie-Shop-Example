@@ -90,8 +90,7 @@ public class UKTill {
 	 */	
 	public ArrayList<DenominationFloat> getChange(int changeDue) {
 		
-		
-		
+		//temp value to hold change as an array before trimming
 		DenominationFloat[] change  = new DenominationFloat[UKDenomination.values().length];
 
 		// Initialise the array with empty floats for each denomination. This is
@@ -101,9 +100,6 @@ public class UKTill {
 			DenominationFloat denomFloat = new DenominationFloat(denom, 0);
 			change[denom.ordinal()] = denomFloat;
 		}
-		
-		
-		
 		
 		//This variable dictates if the value has been edited within the loop
 		//if it has then we know that there's reason to try again to make the change
@@ -205,8 +201,7 @@ public class UKTill {
 				hasValueChanged = true;
 			}
 			
-			
-			
+	
 		}while(changeDue > 0 || hasValueChanged);
 		
 		//used an array list here to trim down the output of the function
@@ -220,12 +215,6 @@ public class UKTill {
 			}
 			
 		}
-		
-	
-		
-		
-		
-		
 		
 		//return the array of the change required 
 		return trimmedChange;
